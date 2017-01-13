@@ -7,9 +7,9 @@ var wordpress = require( "wordpress" );
 //=========================================================
 
 var client = wordpress.createClient({
-    url: "",
-    username: "",
-    password: ""
+    url: "factordaily.com",
+    username: "van",
+    password: "tajkuteeram123"
 });
 
 //=========================================================
@@ -24,8 +24,8 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
   
 // Create chat bot
 var connector = new builder.ChatConnector({
-    appId: '',
-    appPassword: ''
+    appId: '980887a3-cd3f-410c-be25-eff7e0c27328',
+    appPassword: 'wrdFwcUM8eJr9sp6abRWBgV'
 });
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
