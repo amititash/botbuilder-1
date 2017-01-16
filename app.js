@@ -6,12 +6,13 @@ var wordpress = require( "wordpress" );
 // wordpress Setup
 //=========================================================
 
-var client = wordpress.createClient({
-    url: "",
-    username: "",
-    password: ""
-});
 
+var client = wordpress.createClient({
+    url: "factordaily.com",
+    username: "van",
+    password: "tajkuteeram123"
+});
+ 
 //=========================================================
 // Bot Setup
 //=========================================================
@@ -24,8 +25,8 @@ server.listen(process.env.port || process.env.PORT || 3978, function () {
   
 // Create chat bot
 var connector = new builder.ChatConnector({
-    appId: '',
-    appPassword: ''
+    appId: '72b581d7-6bc8-48ca-91cc-a6a23b1de71b',
+    appPassword: '23iX4GHxrJdsji3kDGfPVdP'
 });
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
@@ -65,11 +66,11 @@ bot.dialog('/', [
 
 bot.dialog('/menu', [
     function (session) {
-        session.beginDialog('/carousel');
+        session.beginDialog('/option');
     },
     function (session,results) {
     	console.log("=====================results==========",results);
-        builder.Prompts.choice(session, "Please select choice", "news|acticle|images|(quit)");
+        builder.Prompts.choice(session, "What do you want to do today", "maker stories|maker videos|maker interviews|(quit)");
     },
     function (session, results) {
         if (results.response && results.response.entity != '(quit)') {
@@ -111,7 +112,7 @@ bot.dialog('/images', [
 ]);
 
 
-bot.dialog('/carousel', [
+bot.dialog('/option', [
     function (session) {
         //session.send("You can pass a custom message to Prompts.choice() that will present the user with a carousel of cards to select from. Each card can even support multiple actions.");
         
@@ -120,31 +121,28 @@ bot.dialog('/carousel', [
             .attachmentLayout(builder.AttachmentLayout.carousel)
             .attachments([
                 new builder.HeroCard(session)
-                    .title("Videos")
-                    .subtitle("The Space Needle is an observation tower in Seattle, Washington, a landmark of the Pacific Northwest, and an icon of Seattle.")
+                    .title("Maker News")
+                    .subtitle("Latest stories from the world of makers")
                     .images([
-                        builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Seattlenighttimequeenanne.jpg/320px-Seattlenighttimequeenanne.jpg")
-                            .tap(builder.CardAction.showImage(session, "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Seattlenighttimequeenanne.jpg/800px-Seattlenighttimequeenanne.jpg")),
+                        builder.CardImage.create(session, "https://daks2k3a4ib2z.cloudfront.net/5654e7207deb65b23ea76b73/56be244c0c7be8ca66b78582_7283448284_f2609ed460_o.jpg")
                     ])
                     .buttons([
                         builder.CardAction.imBack(session, "select:100", "Select")
                     ]),
                 new builder.HeroCard(session)
-                    .title("webPages")
-                    .subtitle("Pike Place Market is a public market overlooking the Elliott Bay waterfront in Seattle, Washington, United States.")
+                    .title("Maker videos")
+                    .subtitle("Curated videos of ideas and interviews on maker movements.")
                     .images([
-                        builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/PikePlaceMarket.jpg/320px-PikePlaceMarket.jpg")
-                            .tap(builder.CardAction.showImage(session, "https://upload.wikimedia.org/wikipedia/en/thumb/2/2a/PikePlaceMarket.jpg/800px-PikePlaceMarket.jpg")),
+                        builder.CardImage.create(session, "http://kingofwallpapers.com/maker/maker-001.jpg")
                     ])
                     .buttons([
                         builder.CardAction.imBack(session, "select:101", "Select")
                     ]),
                 new builder.HeroCard(session)
-                    .title("Instructions")
-                    .subtitle("EMP Musem is a leading-edge nonprofit museum, dedicated to the ideas and risk-taking that fuel contemporary popular culture.")
+                    .title("Maker DIY")
+                    .subtitle("Projects on maker ideas.")
                     .images([
-                        builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Night_Exterior_EMP.jpg/320px-Night_Exterior_EMP.jpg")
-                            .tap(builder.CardAction.showImage(session, "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Night_Exterior_EMP.jpg/800px-Night_Exterior_EMP.jpg"))
+                        builder.CardImage.create(session, "http://www.popsci.com/sites/popsci.com/files/styles/large_1x_/public/import/2013/images/2012/10/maker-faire-robots.jpg?itok=mSJNifrX")
                     ])
                     .buttons([
                         builder.CardAction.imBack(session, "select:102", "Select")
@@ -162,13 +160,13 @@ bot.dialog('/carousel', [
         }
         switch (kvPair[1]) {
             case '100':
-                item = "the Space Needle";
+                item = "Maker news";
                 break;
             case '101':
-                item = "Pikes Place Market";
+                item = "Maker videos";
                 break;
             case '102':
-                item = "the EMP Museum";
+                item = "Maker Projects";
                 break;
         }
         session.endDialog('You %s "%s"', action, item);
@@ -289,84 +287,6 @@ bot.dialog('/list', [
 ]);
 
 
-
-// bot.dialog('/receipt', [
-//     function (session) {
-//         session.send("You can send a receipts for facebook using Bot Builders ReceiptCard...");
-//         var msg = new builder.Message(session)
-//             .attachments([
-//                 new builder.ReceiptCard(session)
-//                     .title("Recipient's Name")
-//                     .items([
-//                         builder.ReceiptItem.create(session, "$22.00", "EMP Museum").image(builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/a/a0/Night_Exterior_EMP.jpg")),
-//                         builder.ReceiptItem.create(session, "$22.00", "Space Needle").image(builder.CardImage.create(session, "https://upload.wikimedia.org/wikipedia/commons/7/7c/Seattlenighttimequeenanne.jpg"))
-//                     ])
-//                     .facts([
-//                         builder.Fact.create(session, "1234567898", "Order Number"),
-//                         builder.Fact.create(session, "VISA 4076", "Payment Method")
-//                     ])
-//                     .tax("$4.40")
-//                     .total("$48.40")
-//             ]);
-//         session.send(msg);
-
-//         session.send("Or using facebooks native attachment schema...");
-//         msg = new builder.Message(session)
-//             .sourceEvent({
-//                 facebook: {
-//                     attachment: {
-//                         type: "template",
-//                         payload: {
-//                             template_type: "receipt",
-//                             recipient_name: "Stephane Crozatier",
-//                             order_number: "12345678902",
-//                             currency: "USD",
-//                             payment_method: "Visa 2345",        
-//                             order_url: "http://petersapparel.parseapp.com/order?order_id=123456",
-//                             timestamp: "1428444852", 
-//                             elements: [
-//                                 {
-//                                     title: "Classic White T-Shirt",
-//                                     subtitle: "100% Soft and Luxurious Cotton",
-//                                     quantity: 2,
-//                                     price: 50,
-//                                     currency: "USD",
-//                                     image_url: "http://petersapparel.parseapp.com/img/whiteshirt.png"
-//                                 },
-//                                 {
-//                                     title: "Classic Gray T-Shirt",
-//                                     subtitle: "100% Soft and Luxurious Cotton",
-//                                     quantity: 1,
-//                                     price: 25,
-//                                     currency: "USD",
-//                                     image_url: "http://petersapparel.parseapp.com/img/grayshirt.png"
-//                                 }
-//                             ],
-//                             address: {
-//                                 street_1: "1 Hacker Way",
-//                                 street_2: "",
-//                                 city: "Menlo Park",
-//                                 postal_code: "94025",
-//                                 state: "CA",
-//                                 country: "US"
-//                             },
-//                             summary: {
-//                                 subtotal: 75.00,
-//                                 shipping_cost: 4.95,
-//                                 total_tax: 6.19,
-//                                 total_cost: 56.14
-//                             },
-//                             adjustments: [
-//                                 { name: "New Customer Discount", amount: 20 },
-//                                 { name: "$10 Off Coupon", amount: 10 }
-//                             ]
-//                         }
-//                     }
-//                 }
-//             });
-//         session.endDialog(msg);
-//     }
-// ]);
 
 bot.dialog('/actions', [
     function (session) { 
